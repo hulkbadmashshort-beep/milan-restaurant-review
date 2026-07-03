@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milan Restaurant & Café - Review</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0b0b0b;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            background: linear-gradient(145deg, #141414, #1c1c1c);
+            border: 2px solid #d4af37;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.1);
+        }
+        
+        /* 🔥 Yahan Logo ka Code Sahi Kiya Gaya Hai 🔥 */
+        .logo-img {
+            width: 130px;
+            height: 130px; /* Height aur Width barabar kar di hai */
+            object-fit: cover; /* Ye photo ko stretch hone se rokega aur perfect gol me fit karega */
+            border-radius: 50%; /* Perfect Circle banane ke liye */
+            margin-bottom: 10px;
+            box-shadow: 0 4px 10px rgba(212, 175, 55, 0.2);
+            border: 2px solid #d4af37;
+        }
+
+        .logo-text {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #d4af37;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            color: #aaaaaa;
+            font-size: 10pt;
+            margin-bottom: 25px;
+        }
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 10pt;
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background: #d4af37;
+            color: #000000;
+            font-weight: bold;
+        }
+        .review-box {
+            background: #222222;
+            border-left: 4px solid #d4af37;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11pt;
+            color: #f1f1f1;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .action-btn {
+            background: #d4af37;
+            color: #000000;
+            border: none;
+            padding: 12px 20px;
+            font-size: 11pt;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 12px;
+            transition: background 0.3s ease;
+            text-transform: uppercase;
+        }
+        .action-btn:hover {
+            background: #f7d054;
+        }
+        .secondary-btn {
+            background: transparent;
+            border: 1px solid #aaaaaa;
+            color: #aaaaaa;
+        }
+        .secondary-btn:hover {
+            background: #333333;
+            color: #ffffff;
+        }
+        .google-btn {
+            background: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .google-btn:hover {
+            background: #e1e1e1;
+        }
+        .steps {
+            margin-top: 25px;
+            text-align: left;
+            font-size: 9pt;
+            color: #888888;
+            border-top: 1px solid #333333;
+            padding-top: 15px;
+        }
+        .steps ol {
+            padding-left: 20px;
+        }
+        .steps li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Website Logo -->
+    <img src="Milan Logo.png" alt="Milan Restaurant Logo" class="logo-img">
+    <div class="logo-text">Milan</div>
+    <div class="subtitle">Restaurant & Café — Naini, Prayagraj</div>
+    
+    <div class="filter-container">
+        <button class="filter-btn active" onclick="setLanguage('all')">All</button>
+        <button class="filter-btn" onclick="setLanguage('hinglish')">Hinglish</button>
+        <button class="filter-btn" onclick="setLanguage('english')">English</button>
+    </div>
+
+    <div class="review-box" id="reviewText">Loading perfect review...</div>
+
+    <button class="action-btn secondary-btn" onclick="generateReview()">🔄 New Review</button>
+    <button class="action-btn" id="copyBtn" onclick="copyReview()">📋 Copy Review</button>
+    
+    <a href="https://search.google.com/local/writereview?placeid=ChIJcz6cbe9LhTkRQKfLrkHFrk4&rating=5" target="_blank" class="action-btn google-btn" style="text-align: center;">
+        ⭐ Open Google & Paste
+    </a>
+
+    <div class="steps">
+        <p style="font-weight: bold; margin-bottom: 5px; color: #aaaaaa;">Kaise kaam karta hai:</p>
+        <ol>
+            <li>Apna pasandida review select karein ya "New Review" dabayein.</li>
+            <li>"Copy Review" button par click karein.</li>
+            <li>"Open Google" dabayein, wahan direct 5-star select milega, bas paste karke submit kar dein!</li>
+        </ol>
+    </div>
+</div>
+
+<script>
+    // Reviews Code
+    const reviews = {
+        hinglish: [
+            "Naini me Milan Cafe se acchi jagah nahi hai family ke liye. Khana ekdum lajawab tha!",
+            "Milan Restaurant ka taste bohot badhiya hai, staff ka behavior bhi friendly hai. Must visit place in Prayagraj.",
+            "Ambience bohot shaandar hai aur khane ka taste toh next level hai. Milan Cafe best hai!",
+            "Milan Restaurant & Café me khana bohot swadisht tha. Sasta aur sabse accha café hai Naini me.",
+            "Family ke sath dinner karne ki sabse badhiya jagah hai Milan Cafe. Taste 10/10 hai!",
+            "Doston ke sath party karne ke liye Naini ki best jagah. Service bohot fast hai.",
+            "Khana ekdum fresh aur garam tha. Milan Restaurant ka paneer tikka zaroor try karein.",
+            "Prayagraj me is price me itna accha khana kahin nahi milta. Bohot pasand aaya.",
+            "Interior bohot accha hai aur saaf-safai ka poora dhyan rakha gaya hai.",
+            "Main yahan apni family ke sath aaya tha, sabko khana bohot pasand aaya. Must visit!",
+            "Bohot hi shant aur accha mahaul hai. Coffee aur snacks bohot tasty the.",
+            "Staff bohot polite hai aur service bohot jaldi milti hai. 5 stars from my side.",
+            "Naini me agar accha khana khana hai toh Milan Cafe se better kuch nahi.",
+            "Pizza aur burger ka taste bohot hi kamaal ka tha. Baccho ko bohot pasand aaya.",
+            "Parking ki suvidha bhi acchi hai aur restaurant andar se bohot khoobsurat hai.",
+            "Birthday party ke liye humne ye jagah book ki thi, sab kuch perfect tha!",
+            "Khane ki quality me koi compromise nahi. Milan Restaurant humesha best rehta hai.",
+            "Weekend par doston ke sath chill karne ke liye ekdum sahi jagah hai.",
+            "Yahan ki thali bohot badiya hoti hai. Pet bhar gaya par niyat nahi bhari!",
+            "Ek baar yahan kha loge toh baar baar aaoge. Best cafe in Prayagraj.",
+            "Milan Cafe me doston ke sath time spend karke bohot accha laga, khane ka taste aur quality dono hi zabardast the.",
+            "Naini me itni premium vibe wala restaurant milna mushkil hai. Yahan ki thali aur snacks bohot fresh aur tasty hote hain.",
+            "Staff kaafi acche se baat karta hai aur service bhi on-time hai. Family dinner ke liye ye ek perfect jagah hai.",
+            "Main yahan pehli baar gaya tha aur yahan ka paneer tikka mujhe bohot pasand aaya. Paisa vasool experience tha.",
+            "Agar aap Naini me ek shant aur saaf-suthri jagah dhoondh rahe hain khane ke liye, toh Milan Cafe zaroor visit karein.",
+            "Khane ke portion size se lekar uski presentation tak, sab kuch bohot professionally manage kiya gaya tha. Highly recommended!",
+            "Birthday celebrate karne ke liye humne yahan table book ki thi. Decoration aur food dono hi humari expectations se behtar the.",
+            "Mujhe yahan ki coffee aur sandwiches bohot pasand aaye. Shaam ke waqt doston ke sath baithne ke liye best spot hai.",
+            "Milan Restaurant me khana bilkul ghar jaisa fresh lagta hai, par taste ekdum restaurant style wala. Main zaroor wapas aunga.",
+            "Prices kaafi reasonable hain aur food quality se koi compromise nahi kiya gaya hai. Naini ka no. 1 cafe!",
+            "Ambiance bohot hi relaxing hai aur background music bhi accha chalta hai. Date ya family outing ke liye badhiya choice hai.",
+            "Menu me kaafi saari varieties available hain. Veg aur Chinese dono hi items ka taste lajawab tha.",
+            "Yahan ka staff bohot cooperative hai aur bheed hone ke bawajood service me koi deri nahi hoti.",
+            "Prayagraj me main kaafi jagah gaya hoon, par Milan Cafe ki vibe aur khane ka swaad sabse alag aur behtareen hai.",
+            "Saaf-safai ka bohot acche se dhyan rakha gaya hai. Khana hygienic tha aur taste bhi lajawab tha.",
+            "Zabardast experience raha! Humne doston ke sath yahan party ki thi aur sabne khane ki bohot tareef ki.",
+            "Bacchon ke liye bhi yahan kaafi options hain aur unhe yahan ka pizza aur burger bohot pasand aata hai.",
+            "Agar aapko authentic aur tasty khana chahiye bina zyada paise kharch kiye, toh ye jagah aapke liye hi hai.",
+            "Mujhe yahan ka mahaul bohot positive aur welcoming laga. Har dish bohot pyaar se serve ki jaati hai.",
+            "Naini railway station ke paas itna badiya cafe hona ek achi baat hai. Travelling ke baad relax karne ke liye badhiya hai.",
+            "Cold coffee aur french fries ka combo yahan ka sabse best hai. Main har weekend yahan aana pasand karta hoon.",
+            "Restaurant ka interior bohot sundar hai, photos click karne ke liye bohot saari acchi locations hain yahan par.",
+            "Taste aur quantity dono me hi Milan Restaurant poore marks deserve karta hai. Kabhi nirash nahi kiya.",
+            "Pariwar ke sabhi logo ko yahan ka mahool aur khana bohot pasand aaya. Humara naya favorite restaurant ban gaya hai.",
+            "Aapko yahan ka khana kha kar ekdam satisfaction milega. Service bhi top-class hai aur staff hamesha muskurata rehta hai.",
+            "Milan Cafe ki lighting aur seating bohot comfortable hai. Doston ke sath gappe ladane ke liye best jagah hai.",
+            "Yahan ka Manchurian aur Fried Rice ka taste ekdum authentic hai. Naini me isse behtar Chinese kahin nahi milega.",
+            "Service bohot hi fast hai. Order karne ke kuch hi der me garam-garam khana table par aa jata hai.",
+            "Menu card kaafi balanced hai, har type ke food lovers ke liye kuch na kuch special options hain.",
+            "Main yahan apni team ke sath lunch ke liye aaya tha, sabne khane ki bohot tareef ki. Acha experience raha.",
+            "Cafe ka entrance aur outer look bohot attractive hai. Naini market me ye ek landmark jaisa lagta hai.",
+            "Staff ka behavior bohot humble hai, wo har customer ko bahut dhyan se serve karte hain.",
+            "Agar aapko crispy snacks pasand hain, toh yahan ka Crispy Corn zaroor try karein. Bohot tasty hai!",
+            "Itni acchi service aur itna badiya taste, wo bhi itne kam daam me! Milan Cafe sachme value-for-money hai.",
+            "Hum yahan anniversary celebrate karne aaye the, aur inhone tables ko bohot acche se decorate kiya tha.",
+            "Khane me masala balance bilkul perfect rehta hai. Na zyada teekha, na bilkul feeka. Ekdum balanced!",
+            "Jab bhi Naini aana hota hai, main Milan Cafe pe ruk kar coffee zaroor pita hoon. Best refreshment point.",
+            "Cleaning staff har waqt tables saaf karte rehte hain, jo ki bohot achi baat hai. Hygiene top notch hai.",
+            "Pizza crust kaafi thin aur crispy tha. Toppings bhi bohot fresh use karte hain ye log.",
+            "Yahan ka milkshake try kiya tha, kaafi thick aur tasty tha. Bilkul real fruit flavor aaya.",
+            "Ambience itna quiet aur peaceful hai ki aap aaram se yahan baith kar apna laptop par kaam bhi kar sakte hain.",
+            "Staff ne hume yahan ki special thali suggest ki, aur wo sachme bohot hi लाजवाब (lajawab) thi.",
+            "Parking ki dikkat Naini me bohot hoti hai, par yahan cafe ke samne kaafi jagah mil jati hai.",
+            "Iski location perfect hai, main road se bilkul attached. Dhoondhne me koi dikkat nahi hoti.",
+            "Sweets aur dessert option bhi kaafi badiya hain. Khane ke baad gulab jamun zaroor khayein.",
+            "Yahan ke music ka volume hamesha control me rehta hai, jisse aap aaram se baat kar sakte hain.",
+            "Mujhe yahan ka service model bohot pasand aaya. Customer ki convenience ka pura dhyan rakha jata hai.",
+            "Milan Restaurant ki reputation Naini me bohot achi hai, aur wo reputation ye log banaye hue hain.",
+            "Yahan aane ka ek hi reason hai - consistency. Har baar khane ka swaad waisa hi badhiya rehta hai.",
+            "Ek perfect evening ke liye Milan Cafe se better koi option nahi hai. Bohot hi cozy aur comfortable place!",
+            "Milan Cafe me baith kar jo sukoon milta hai, wo kahi aur nahi. Chai aur pakode ka taste ekdum ghar jaisa hai.",
+            "Yahan ka Staff bohot hi friendly aur helpful hai. Har baar yahan aakar ek positive vibe milti hai.",
+            "Naini me agar aapko best food aur best ambiance chahiye, toh Milan Cafe se better koi jagah nahi hai.",
+            "Main yahan ka regular customer hoon, aur har baar yahan ka taste aur quality ekdum top level ka rehta hai.",
+            "Birthday celebration ke liye ye cafe ekdum perfect hai. Sasta, suvidhajanak aur bohot saaf-suthra hai.",
+            "Yahan ka Tandoori Platter zaroor try karna, uska swaad bohot hi lajawab aur juicy hai.",
+            "Cafe ki location bohot convenient hai, main road par hone ki wajah se yahan aana bohot aasan hai.",
+            "Yahan ke burger aur fries ka taste bacchon ko bohot pasand aata hai. Family ke sath aane ke liye best spot.",
+            "Milan Restaurant me khane ki variety bohot hai, aap kuch bhi try karein, nirash nahi honge.",
+            "Yahan ki service bohot hi professional hai. Waiters bohot politely deal karte hain har customer se.",
+            "Bohot hi shant aur accha mahaul hai yahan. Agar aapko akele mein bhi relax karna hai toh yahan aa sakte hain.",
+            "Paisa vasool jagah hai! Itne kam daam me itni achi quality ka khana milna aaj kal mushkil hai.",
+            "Yahan ke paneer dishes ka swaad bohot hi amazing hai. Masala balance ekdum perfect hota hai.",
+            "Cafe ka interior kafi moden hai, aur har jagah safai ka pura dhyan rakha jata hai.",
+            "Humne yahan doston ke sath dinner kiya tha aur sabne khane ki bohot tareef ki. Acha time spend hua.",
+            "Yahan ka cold coffee menu kafi lamba hai, aur har ek drink ka taste ekdusre se behtar hai.",
+            "Staff ne bahut acche suggestions diye menu ke liye, jo ki humne try kiye aur humein bohot pasand aaye.",
+            "Parking ki koi tension nahi hoti yahan, jo ki Naini jaise busy area me bohot badi baat hai.",
+            "Har ek table par safai rehti hai aur ambiance bahut cozy feel deta hai. Milan Cafe is best!",
+            "Desserts mein inka chocolate brownie bohot tasty hai, khane ke baad zaroor try karein.",
+            "Service me speed ka pura dhyan rakha jata hai, aapka order jada der tak pending nahi rehta.",
+            "Main har weekend yahan apne doston ke sath aata hoon, aur har baar kuch naya try karta hoon.",
+            "Milan Restaurant ki hospitality bahut achi hai. Customers ko treat karne ka tareeka inka sabse alag hai.",
+            "Ye jagah Naini ka pride hai. Itna accha cafe hona apne aap me bahut badi baat hai.",
+            "Jab bhi aapko ache mood mein accha khana khana ho, Milan Cafe hi pehli choice honi chahiye.",
+            "Milan Cafe ka khana bohot hi fresh hai aur yahan ki service ka toh kehna hi kya, ekdum fast!",
+            "Agar aap Naini me ek family-friendly restaurant dhoondh rahe hain, toh yahan zaroor aayein.",
+            "Yahan ka veg biryani bohot hi flavorful hai. Masala aur rice ka perfect combination hai.",
+            "Bohot hi cozy vibes hain yahan. Raat ke time doston ke sath baithne ke liye best jagah hai.",
+            "Staff kaafi humble hai aur customer satisfaction ko bohot importance dete hain. Bohot accha laga.",
+            "Yahan ke snacks bohot crispy hain, especially inke pakode aur fries bohot mast banate hain ye log.",
+            "Milan Restaurant ki ambiance bahut hi calm hai. Stress bhulane ke liye yahan kaafi acchi jagah hai.",
+            "Prices bohot reasonable hain, student hone ke naate ye mera favorite hangout spot ban gaya hai.",
+            "Paneer butter masala aur naan ka combination yahan ka best hai. Ekdum authentic taste hai.",
+            "Yahan ki cleanliness dekh kar bohot khushi hoti hai. Bohot hi hygienic aur saaf restaurant hai.",
+            "Service itni fast hai ki aapko wait karne ki bilkul zaroorat nahi padti. Bohot hi efficient team hai.",
+            "Main yahan aksar aata hoon aur har baar kuch naya try karta hoon, aur har dish bohot tasty hoti hai.",
+            "Cafe ki location bohot badiya hai, asani se mil jati hai aur parking bhi kaafi hai.",
+            "Yahan ka music aur lighting ka combination ekdum relaxing feel deta hai. Date night ke liye perfect hai.",
+            "Food quality aur taste me kabhi compromise nahi hota. Yahan ka khana humesha hot aur fresh milta hai.",
+            "Mujhe yahan ki cold coffee bohot pasand hai, bohot creamy aur tasty hoti hai. Zaroor try karein.",
+            "Staff ka behavior bohot professional hai, wo har customer ko bohot acche se handle karte hain.",
+            "Birthday party ke liye yahan ka setup bahut sundar hai. Humne bohot enjoy kiya yahan.",
+            "Aap agar Naini me hain, toh Milan Cafe ka khana miss mat karna. Bohot hi badhiya experience hai.",
+            "Dessert me inka brownie ice-cream combo best hai. Khane ke baad ye treat zaroor lein.",
+            "Ambiance bohot hi colorful aur vibrant hai, photo lene ke liye bohot saare corners hain yahan.",
+            "Yahan ka menu card bohot well-designed hai, sab kuch clear aur badiya options hain.",
+            "Service me polite aur smiling staff dekh kar hi customer khush ho jata hai. Bohot acchi hospitality hai.",
+            "Paisa vasool khana hai! Itni badiya quality ka khana is rate par milna mushkil hai.",
+            "Milan Cafe ek aisi jagah hai jahan aap baar-baar aana pasand karenge. Best place in town!",
+            "Milan Cafe me har baar naye taste ka experience hota hai. Staff bohot hi hardworking hai.",
+            "Yahan ka coffee menu bohot bada hai, main har baar kuch naya try karta hoon aur sab badhiya hota hai.",
+            "Naini market me itna peaceful aur accha cafe milna muskil hai. Best place to relax!",
+            "Khana bohot hi hygienic tarike se serve kiya jata hai, jo ki bohot zaruri hai.",
+            "Yahan ke burger aur sandwich ka combination bohot hi mast hai. Jarur try karein.",
+            "Service kaafi fast hai aur staff hamesha help karne ke liye taiyar rehte hain.",
+            "Main yahan apne family ke sath aaya tha, sabko khana aur ambiance bohot pasand aaya.",
+            "Yahan ka price range students ke liye bohot hi pocket-friendly hai. Bohot badhiya cafe hai.",
+            "Milan Cafe ka interior bohot hi classy hai, photo lene ke liye bohot sahi jagah hai.",
+            "Khane ka quality aur quantity dono hi ekdum balance hai. Pet bhi bharta hai aur man bhi.",
+            "Yahan ke music aur lighting se ekdum perfect cafe wali vibe aati hai.",
+            "Staff ne menu ke baare me bohot ache se explain kiya, jisse humne sahi dish choose ki.",
+            "Naini me agar aapko Chinese ka cravings ho, toh Milan Cafe is the go-to place.",
+            "Cleaning staff itni mehnat karte hain ki har jagah ekdum chamakti hui milti hai.",
+            "Har dish ka taste bohot unique hai. Yahan ka chef sachme bohot talented hai.",
+            "Yahan par birthday party host karna ek bohot hi accha decision tha humara.",
+            "Cafe ki location main road par hone ki wajah se bahut easily mil jati hai.",
+            "Yahan ke cold coffee aur chocolate shake ka koi competition nahi hai. Best in town!",
+            "Hospitality itni acchi hai ki aap yahan baar-baar aana chahenge.",
+            "Agar aapko thoda chill aur relax karna hai, toh Milan Cafe zaroor aayein.",
+            "Yahan ke paneer tikka ki jitni tareef karo kam hai. Bohot hi juicy aur tasty hota hai.",
+            "Service kaafi consistent hai, har baar waisa hi swaad milta hai jaisa pehli baar mila tha.",
+            "Milan Cafe Naini ke best restaurants me se ek hai. Har kisi ko yahan aana chahiye.",
+            "Cafe ke chairs aur tables bohot comfortable hain, aap lambi der tak yahan baith sakte hain.",
+            "Zabardast experience raha! Milan Cafe ka khana aur service dono hi 10/10 hain.",
+            "The atmosphere at Milan Cafe is very relaxing; it's the best place to sit after work.",
+            "The taste of their thali is just like homemade food. It’s a perfect option for a full meal.",
+            "The staff served us with a lot of love. The level of hospitality here is very high.",
+            "If you are in Naini and missing Chinese food, you must try their chilli paneer.",
+            "The cafe is very well-maintained. They are the best when it comes to cleanliness and hygiene.",
+            "I really liked their seating; it feels quite private and comfortable.",
+            "Their menu card is very detailed, with great descriptions for every dish.",
+            "Coming here with friends is always fun. Milan Cafe is our favorite hangout spot.",
+            "The taste of their shakes and mocktails feels completely natural and fresh. Highly recommended!",
+            "The location of Milan Cafe is very central, making it very easy to reach.",
+            "Food is always served hot and fresh. Their quality control is very strong.",
+            "The staff is very active; the order reaches the table as soon as you place it. Best service!",
+            "The selection of music here is great, which makes the ambiance even better.",
+            "I tried their special coffee; it was truly energizing and delicious.",
+            "The prices are so reasonable that anyone can visit here repeatedly without a second thought.",
+            "The signature dish at Milan Cafe is very tasty. Whatever you try, you'll love it.",
+            "The restaurant's lighting is so good that the food looks even more appetizing.",
+            "We came here for a birthday party, and they managed everything perfectly.",
+            "The combination of their pakoras and tea is the best for rainy days. Must visit!",
+            "They take customer feedback very seriously, which is a great thing.",
+            "The cafe is very vibrant and every corner looks great. A heaven for photo lovers!",
+            "Eating here never makes you feel heavy or bloated. The food is very healthy.",
+            "The secret to Milan Cafe's success is consistency. You get the same great taste every time.",
+            "The crockery and serving style here look very premium. It gives a fine-dining feel.",
+            "If you want to spend a perfect weekend, Milan Cafe is the best place to be."
+        ],
+        english: [
+            "Absolutely loved the food and service at Milan Restaurant & Café. Best place in Naini for family dining!",
+            "Great ambience, quick service, and delicious food. Milan Cafe is a must-visit spot in Prayagraj.",
+            "The taste was phenomenal and the staff was extremely polite. Highly recommend Milan Restaurant!",
+            "Perfect place for party and dining in Naini. Excellent food quality and neat and clean environment.",
+            "Milan Restaurant & Café never disappoints. Outstanding hospitality and delicious dishes!",
+            "One of the best cafes in Naini. The interiors are beautiful and very photogenic.",
+            "Food is top-notch and reasonably priced. A great place for family get-togethers.",
+            "The service is super fast and the staff is very courteous. 5 stars!",
+            "Tried their paneer butter masala and it was out of this world. Highly recommended.",
+            "Very hygienic and clean environment. The food tastes fresh and authentic.",
+            "Best place to hang out with friends in Prayagraj. The vibe is just amazing.",
+            "Pocket-friendly restaurant with premium taste. Will definitely visit again.",
+            "The coffee and fast food options are great. Perfect spot for evening snacks.",
+            "We celebrated an anniversary here and the management made it very special.",
+            "Awesome experience! The portion size is good and the taste is brilliant.",
+            "If you are in Naini, you must try Milan Cafe. You won't regret it.",
+            "Very well maintained restaurant. The seating area is quite comfortable.",
+            "The food was served piping hot and the flavors were perfectly balanced.",
+            "Good parking space and easy to locate. The food quality is consistent every time.",
+            "A hidden gem in Naini! Loved the variety of options on their menu.",
+            "Had a wonderful time with my friends at Milan Cafe. The taste and quality of the food were absolutely outstanding.",
+            "It's hard to find such a premium vibe in Naini. The thali and snacks here are always fresh and delicious.",
+            "The staff is very polite and the service is right on time. It is a perfect place for a family dinner.",
+            "This was my first time visiting and I absolutely loved their paneer tikka. It was truly a value-for-money experience.",
+            "If you are looking for a peaceful and clean place to eat in Naini, you must definitely visit Milan Cafe.",
+            "From the portion size of the food to its presentation, everything was managed very professionally. Highly recommended!",
+            "We booked a table here to celebrate a birthday. Both the decoration and the food exceeded our expectations.",
+            "I really liked the coffee and sandwiches here. It's the best spot to hang out with friends in the evening.",
+            "The food at Milan Restaurant feels as fresh as home-cooked meals but has that perfect restaurant-style taste. Will return!",
+            "The prices are quite reasonable and there is no compromise on the food quality. Definitely Naini's number one cafe!",
+            "The ambiance is very relaxing with good background music. A great choice for a date or a family outing.",
+            "There are a lot of varieties available on the menu. Both the vegetarian and Chinese items tasted fantastic.",
+            "The staff here is very cooperative and despite the rush, there is never any delay in their service.",
+            "I have visited many places in Prayagraj, but the vibe and the taste of the food at Milan Cafe are unmatched.",
+            "They maintain high standards of cleanliness. The food was extremely hygienic and the taste was simply wonderful.",
+            "An amazing experience overall! We had a party with friends here and everyone praised the food a lot.",
+            "There are plenty of kid-friendly options here, and my children really love their pizza and burgers.",
+            "If you want authentic and tasty food without spending a fortune, this place is exactly what you need.",
+            "I found the atmosphere here very positive and welcoming. Every dish is served with a lot of care and warmth.",
+            "Having such a great cafe near Naini is a blessing. It's a wonderful place to relax and enjoy a good meal.",
+            "The combo of cold coffee and french fries is the best here. I love visiting this place almost every weekend.",
+            "The interior of the restaurant is beautiful. There are many great spots to click aesthetic pictures for social media.",
+            "Milan Restaurant deserves full marks for both taste and quantity. They have never disappointed us.",
+            "Everyone in my family loved the atmosphere and the food. It has easily become our new favorite restaurant in town.",
+            "You will get complete satisfaction after eating here. The service is top-class and the staff always carries a smile.",
+            "The lighting and seating at Milan Cafe are very comfortable. It is the best place to chat with friends.",
+            "The taste of their Manchurian and Fried Rice is authentic. You won't find better Chinese food in Naini.",
+            "The service is incredibly fast. Hot food reaches the table within minutes of ordering.",
+            "The menu is well-balanced, offering special options for every type of food lover.",
+            "I visited here with my team for lunch, and everyone praised the food. It was a great experience.",
+            "The entrance and the overall look of the cafe are very attractive. It feels like a landmark in Naini market.",
+            "The staff is very humble and they serve every customer with great attention.",
+            "If you love crispy snacks, you must try their Crispy Corn. It is absolutely delicious!",
+            "Great service and wonderful taste at such an affordable price! Milan Cafe is truly value for money.",
+            "We came here to celebrate an anniversary, and they decorated the table very beautifully.",
+            "The spice balance in the food is perfect. Not too spicy, not too bland. Just balanced!",
+            "Whenever I visit Naini, I always stop at Milan Cafe for a coffee. It is the best refreshment point.",
+            "The cleaning staff constantly maintains the tables, which is very impressive. Hygiene is top-notch.",
+            "The pizza crust was thin and crispy. They use very fresh toppings for their pizzas.",
+            "I tried their milkshake; it was thick and tasty with a real fruit flavor.",
+            "The ambiance is so quiet and peaceful that you can comfortably work on your laptop here.",
+            "The staff suggested their special thali, and it was truly outstanding.",
+            "Parking is often a hassle in Naini, but you can easily find space in front of this cafe.",
+            "The location is perfect, right off the main road, making it very easy to find.",
+            "They also have great options for sweets and desserts. Must try their gulab jamun after the meal.",
+            "The music volume is always kept at a comfortable level, allowing for easy conversation.",
+            "I really like their service model; they prioritize customer convenience very well.",
+            "Milan Restaurant has a great reputation in Naini, and they consistently live up to it.",
+            "The only reason I keep coming back is consistency. The food tastes delicious every single time.",
+            "There is no better option than Milan Cafe for a perfect evening. It is a very cozy and comfortable place!",
+            "The peace you find at Milan Cafe is unmatched. The tea and pakoras taste just like home.",
+            "The staff here is incredibly friendly and helpful. I always get a positive vibe whenever I visit.",
+            "If you want the best food and best ambiance in Naini, there is no place better than Milan Cafe.",
+            "I am a regular customer here, and the taste and quality are consistently at a top level every time.",
+            "This cafe is perfect for birthday celebrations. It is affordable, convenient, and very clean.",
+            "You must try their Tandoori Platter; the taste is truly delicious and very juicy.",
+            "The cafe's location is very convenient, and being on the main road makes it easy to reach.",
+            "My kids love the taste of their burgers and fries. It is the best spot for a family outing.",
+            "There is a great variety of food at Milan Restaurant; whatever you try, you won't be disappointed.",
+            "The service here is very professional. The waiters deal with every customer very politely.",
+            "The atmosphere is very quiet and nice. If you want to relax even alone, you can come here.",
+            "It is a value-for-money place! Finding such high-quality food at such low prices is rare these days.",
+            "The taste of their paneer dishes is amazing. The spice balance is always perfect.",
+            "The interior of the cafe is quite modern, and they pay full attention to cleanliness everywhere.",
+            "We had dinner with friends here and everyone praised the food. We spent a great time.",
+            "Their cold coffee menu is quite extensive, and every drink tastes better than the last.",
+            "The staff gave us great suggestions from the menu, which we tried and absolutely loved.",
+            "There is no tension of parking here, which is a big deal in a busy area like Naini.",
+            "Every table is kept clean and the ambiance feels very cozy. Milan Cafe is the best!",
+            "Among desserts, their chocolate brownie is very tasty; do try it after your meal.",
+            "They pay full attention to speed in service; your order never stays pending for too long.",
+            "I visit here with my friends every weekend, and I try something new every time.",
+            "The hospitality at Milan Restaurant is excellent. Their way of treating customers is unique.",
+            "This place is the pride of Naini. Having such a good cafe is a great thing.",
+            "Whenever you want to eat good food in a good mood, Milan Cafe should be your first choice.",
+            "The food at Milan Cafe is very fresh and the service is exceptionally fast!",
+            "If you are looking for a family-friendly restaurant in Naini, you must visit this place.",
+            "Their veg biryani is very flavorful. It has a perfect combination of spices and rice.",
+            "The vibes here are very cozy. It is the best place to sit with friends at night.",
+            "The staff is very humble and they give great importance to customer satisfaction. Had a great time.",
+            "Their snacks are very crispy, especially their pakoras and fries; they make them really well.",
+            "The ambiance at Milan Restaurant is very calm. It is a great place to forget your stress.",
+            "The prices are very reasonable; being a student, this has become my favorite hangout spot.",
+            "The combination of paneer butter masala and naan is the best here. Truly authentic taste.",
+            "It is a pleasure to see such cleanliness here. It is a very hygienic and neat restaurant.",
+            "The service is so fast that you never have to wait long. They have a very efficient team.",
+            "I visit here often and try something new every time, and every dish is very delicious.",
+            "The cafe's location is excellent; it is easy to find and there is plenty of parking.",
+            "The combination of music and lighting here gives a very relaxing feel. Perfect for a date night.",
+            "They never compromise on food quality and taste. The food is always served hot and fresh.",
+            "I love their cold coffee; it is very creamy and tasty. You must try it.",
+            "The staff's behavior is very professional; they handle every customer very well.",
+            "The setup for birthday parties here is very beautiful. We enjoyed ourselves a lot.",
+            "If you are in Naini, don't miss the food at Milan Cafe. It is a wonderful experience.",
+            "Among desserts, their brownie ice-cream combo is the best. Do take this treat after the meal.",
+            "The ambiance is very colorful and vibrant; there are many corners to take photos here.",
+            "The menu card is very well-designed, with everything clear and great options available.",
+            "Seeing polite and smiling staff in service makes any customer happy. Excellent hospitality.",
+            "Value-for-money food! Finding such high-quality food at this rate is difficult.",
+            "Milan Cafe is a place you will love to visit again and again. Best place in town!",
+            "I experience a new taste every time at Milan Cafe. The staff is extremely hardworking.",
+            "They have such a large coffee menu; I try something new each time and it's always great.",
+            "Finding such a peaceful and good cafe in Naini market is difficult. Best place to relax!",
+            "The food is served in a very hygienic way, which is something I really appreciate.",
+            "The combination of their burgers and sandwiches is just amazing. You must try it.",
+            "The service is quite fast, and the staff is always ready to help with a smile.",
+            "I came here with my family, and everyone loved both the food and the ambiance.",
+            "The price range is very pocket-friendly for students. A truly wonderful cafe.",
+            "The interior of Milan Cafe is very classy and is a perfect spot for photography.",
+            "The quality and quantity of the food are perfectly balanced. Very satisfying!",
+            "The music and lighting here give the place a perfect cafe vibe.",
+            "The staff explained the menu very well, which helped us choose the right dish.",
+            "If you have cravings for Chinese food in Naini, Milan Cafe is the go-to place.",
+            "The cleaning staff works so hard that everything stays sparkling clean.",
+            "Every dish has a unique taste. The chef here is truly very talented.",
+            "Hosting a birthday party here was one of our best decisions.",
+            "Since the cafe is on the main road, it is very easy to find.",
+            "There is no competition for their cold coffee and chocolate shakes. Best in town!",
+            "The hospitality is so good that you will want to come back again and again.",
+            "If you want to chill and relax, you must visit Milan Cafe.",
+            "Their paneer tikka is beyond praise. It is very juicy and delicious.",
+            "The service is very consistent; you get the same great taste every single time.",
+            "Milan Cafe is one of the best restaurants in Naini. Everyone should visit here.",
+            "The chairs and tables at the cafe are very comfortable, perfect for long sittings.",
+            "It was a fantastic experience! Both the food and service at Milan Cafe are 10/10.",
+            "The atmosphere at Milan Cafe is very relaxing; it's the best place to sit after work.",
+            "The taste of their thali is just like homemade food. It’s a perfect option for a full meal.",
+            "The staff served us with a lot of love. The level of hospitality here is very high.",
+            "If you are in Naini and missing Chinese food, you must try their chilli paneer.",
+            "The cafe is very well-maintained. They are the best when it comes to cleanliness and hygiene.",
+            "I really liked their seating; it feels quite private and comfortable.",
+            "Their menu card is very detailed, with great descriptions for every dish.",
+            "Coming here with friends is always fun. Milan Cafe is our favorite hangout spot.",
+            "The taste of their shakes and mocktails feels completely natural and fresh. Highly recommended!",
+            "The location of Milan Cafe is very central, making it very easy to reach.",
+            "Food is always served hot and fresh. Their quality control is very strong.",
+            "The staff is very active; the order reaches the table as soon as you place it. Best service!",
+            "The selection of music here is great, which makes the ambiance even better.",
+            "I tried their special coffee; it was truly energizing and delicious.",
+            "The prices are so reasonable that anyone can visit here repeatedly without a second thought.",
+            "The signature dish at Milan Cafe is very tasty. Whatever you try, you'll love it.",
+            "The restaurant's lighting is so good that the food looks even more appetizing.",
+            "We came here for a birthday party, and they managed everything perfectly.",
+            "The combination of their pakoras and tea is the best for rainy days. Must visit!",
+            "They take customer feedback very seriously, which is a great thing.",
+            "The cafe is very vibrant and every corner looks great. A heaven for photo lovers!",
+            "Eating here never makes you feel heavy or bloated. The food is very healthy.",
+            "The secret to Milan Cafe's success is consistency. You get the same great taste every time.",
+            "The crockery and serving style here look very premium. It gives a fine-dining feel.",
+            "If you want to spend a perfect weekend, Milan Cafe is the best place to be."
+        ]
+    };
+
+    let currentLang = 'all';
+
+    function getRandomReview(lang) {
+        let pool = [];
+        if (lang === 'all') {
+            pool = [...reviews.hinglish, ...reviews.english];
+        } else {
+            pool = reviews[lang];
+        }
+        return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        generateReview();
+    }
+
+    function generateReview() {
+        document.getElementById('reviewText').innerText = getRandomReview(currentLang);
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.innerText = "📋 Copy Review";
+        copyBtn.style.background = "#d4af37";
+    }
+
+    function copyReview() {
+        const text = document.getElementById('reviewText').innerText;
+        
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text).then(showCopiedSuccess);
+        } else {
+            let textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopiedSuccess();
+            } catch (err) {
+                alert("Mobile browser par copy nahi ho paya. Kripya text select karke manual copy karein.");
+            }
+            textArea.remove();
+        }
+    }
+
+    function showCopiedSuccess() {
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.innerText = "Copied! ✓";
+        copyBtn.style.background = "#2ecc71";
+    }
+
+    generateReview();
+</script>
+
+</body>
+</html>
